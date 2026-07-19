@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>예스24 베스트셀러 위젯</title>
+<style>
+  :root {
+    --accent: #0770c1;
+    --up: #d64040;
+    --down: #3665d6;
+    --line: #e6e8eb;
+    --text: #1c2430;
+    --sub: #68717d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+    background: #f4f6f8; color: var(--text); padding: 24px 12px;
+  }
+  .widget {
+    max-width: 560px; margin: 0 auto; background: #fff;
+    border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  }
+  .widget-head {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 16px 18px; border-bottom: 1px solid var(--line);
+  }
+  .widget-head h1 { font-size: 17px; }
+  .widget-head h1 em { color: var(--accent); font-style: normal; }
+  .badge {
+    font-size: 11px; color: #8a5800; background: #fff3d6;
+    border: 1px solid #eeda9e; border-radius: 999px; padding: 2px 9px;
+  }
+  .widget-head select {
+    margin-left: auto; font: inherit; font-size: 13px;
+    padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+  }
+  .list { list-style: none; }
+  .item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 18px; border-bottom: 1px solid var(--line);
+  }
+  .item:last-child { border-bottom: 0; }
+  .rank { width: 22px; font-size: 15px; font-weight: 700; color: var(--accent); text-align: center; flex: none; }
+  .cover, .cover-fallback { width: 44px; height: 62px; border-radius: 4px; flex: none; object-fit: cover; }
+  .cover-fallback {
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(150deg, #dfe9f2, #c6d6e6);
+    color: #57718a; font-size: 18px; font-weight: 700;
+  }
+  .info { min-width: 0; flex: 1; }
+  .title { font-size: 14px; font-weight: 600; color: inherit; text-decoration: none; display: block;
+           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  a.title:hover { color: var(--accent); text-decoration: underline; }
+  .meta { font-size: 12px; color: var(--sub); margin-top: 3px;
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .price { font-size: 12.5px; margin-top: 3px; }
+  .price .original { color: var(--sub); text-decoration: line-through; margin-right: 6px; }
+  .price .sale { font-weight: 700; }
+  .updown { width: 38px; text-align: right; font-size: 12.5px; font-weight: 700; flex: none; }
+  .updown.up { color: var(--up); }
+  .updown.down { color: var(--down); }
+  .updown.same { color: var(--sub); font-weight: 400; }
+  .status { padding: 26px 18px; text-align: center; font-size: 13px; color: var(--sub); }
+  .status.error { color: var(--up); }
+  .widget-foot {
+    padding: 10px 18px; font-size: 11.5px; color: var(--sub);
+    background: #fafbfc; border-top: 1px solid var(--line);
+  }
+  .widget-foot a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="widget">
+    <div class="widget-head">
+      <h1>예스24 베스트셀러 <em>TOP 10</em></h1>
+      <span id="demoBadge" class="badge" hidden>데모 데이터</span>
+      <select id="category" aria-label="카테고리 선택"></select>
+    </div>
+    <ol id="list" class="list"></ol>
+    <div id="status" class="status" hidden></div>
+    <div class="widget-foot">데이터 제공:
+      <a href="https://developers.yes24.com" target="_blank" rel="noopener">예스24 오픈 API</a>
+    </div>
+  </div>
+
+<script>
+"use strict";
+const $list = document.getElementById("list");
+const $status = document.getElementById("status");
+const $category = document.getElementById("category");
+const $demoBadge = document.getElementById("demoBadge");
+
+// innerHTML 대신 DOM API 로 렌더링 — 응답 데이터가 스크립트로 해석될 여지를 차단
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+function showStatus(message, isError) {
+  $status.textContent = message;
+  $status.className = "status" + (isError ? " error" : "");
+  $status.hidden = false;
+}
+
+function formatPrice(value) {
+  return Number(value ?? 0).toLocaleString("ko-KR") + "원";
+}
+
+function renderUpDown(upDown) {
+  if (upDown === null || upDown === undefined) return el("span", "updown same", "—");
+  if (upDown > 0) return el("span", "updown up", "▲" + upDown);
+  if (upDown < 0) return el("span", "updown down", "▼" + Math.abs(upDown));
+  return el("span", "updown same", "－");
+}
+
+function renderItems(items) {
+  $list.replaceChildren();
+  items.forEach((book, index) => {
+    const li = el("li", "item");
+    li.append(el("span", "rank", String(book.sortOrder ?? index + 1)));
+
+    if (book.cover) {
+      const img = el("img", "cover");
+      img.src = book.cover;
+      img.alt = "";
+      img.onerror = () => img.replaceWith(el("span", "cover-fallback", (book.title || "?").charAt(0)));
+      li.append(img);
+    } else {
+      li.append(el("span", "cover-fallback", (book.title || "?").charAt(0)));
+    }
+
+    const info = el("div", "info");
+    const title = el(book.link ? "a" : "span", "title", book.title || "(제목 없음)");
+    if (book.link) { title.href = book.link; title.target = "_blank"; title.rel = "noopener"; }
+    info.append(title);
+    info.append(el("div", "meta", [book.author, book.publisher].filter(Boolean).join(" · ")));
+
+    const price = el("div", "price");
+    if (book.shopPrice && book.shopPrice !== book.salePrice)
+      price.append(el("span", "original", formatPrice(book.shopPrice)));
+    price.append(el("span", "sale", formatPrice(book.salePrice)));
+    info.append(price);
+
+    li.append(info);
+    li.append(renderUpDown(book.upDown));
+    $list.append(li);
+  });
+}
+
+async function loadCategories() {
+  try {
+    const res = await fetch("/api/categories");
+    const json = await res.json();
+    const categories = json?.data?.data ?? []; // 카테고리 목록 응답은 data.data[] 구조
+    if (!categories.length) throw new Error("empty");
+    for (const c of categories) {
+      const option = el("option", null, `${c.categoryName} (${c.categoryId})`);
+      option.value = c.categoryId;
+      $category.append(option);
+    }
+  } catch {
+    const option = el("option", null, "국내도서 (001)");
+    option.value = "001";
+    $category.append(option);
+  }
+}
+
+async function loadBestseller() {
+  $list.replaceChildren();
+  showStatus("불러오는 중…", false);
+  try {
+    const res = await fetch(`/api/bestseller?categoryId=${encodeURIComponent($category.value)}&pageSize=10`);
+    $demoBadge.hidden = res.headers.get("X-Demo-Mode") !== "1";
+    const json = await res.json();
+    if (!json.success || !json.data) {
+      showStatus(`[${json.errorCode ?? res.status}] ${json.message ?? "조회에 실패했습니다."}`, true);
+      return;
+    }
+    $status.hidden = true;
+    renderItems((json.data.items ?? []).slice(0, 10));
+  } catch (err) {
+    showStatus("프록시 서버에 연결할 수 없습니다. node proxy.js 실행 여부를 확인하세요.", true);
+  }
+}
+
+$category.addEventListener("change", loadBestseller);
+loadCategories().then(loadBestseller);
+</script>
+</body>
+</html>

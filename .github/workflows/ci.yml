@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  openapi-lint:
+    name: OpenAPI 명세 검증
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: redocly lint
+        run: npx --yes @redocly/cli lint openapi/yes24-openapi-v1.json
+
+  samples-build:
+    name: 샘플 빌드 스모크
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: .NET 샘플 빌드
+        run: dotnet build samples/dotnet-book-search --nologo
+
+      - name: JS 프록시 구문 검사
+        run: node --check samples/javascript-bestseller-widget/proxy.js
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python 샘플 구문 검사
+        run: python -m py_compile samples/python-book-analysis/bestseller_analysis.py samples/mcp-book-search/server.py

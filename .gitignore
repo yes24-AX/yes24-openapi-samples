@@ -1,0 +1,25 @@
+# .NET
+bin/
+obj/
+*.user
+
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# 분석 스크립트 산출물
+samples/python-book-analysis/output/
+
+# 환경변수·시크릿
+.env
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vs/
+.idea/

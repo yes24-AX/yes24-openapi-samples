@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "yes24-books": {
+      "command": "python",
+      "args": ["C:\\path\\to\\yes24-openapi-samples\\samples\\mcp-book-search\\server.py"],
+      "env": {
+        "YES24_API_KEY": "발급받은키"
+      }
+    }
+  }
+}

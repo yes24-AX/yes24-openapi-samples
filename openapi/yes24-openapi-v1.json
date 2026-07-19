@@ -1,0 +1,2709 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "YES24 오픈 API",
+    "description": "예스24 도서 검색·베스트셀러·신상품 오픈 API 명세입니다.\n\n- API 키 발급: [예스24 개발자센터](https://developers.yes24.com)\n- 인증: 모든 요청에 `X-Api-Key` 헤더 필요\n- 요청 한도: 5회/초, 5,000회/일 (초과 시 429 응답과 `Retry-After` 헤더 반환)\n- 응답 형식: `{ success, message, data, errorCode }` (camelCase)",
+    "contact": {
+      "name": "YES24 개발자센터",
+      "url": "https://developers.yes24.com"
+    },
+    "version": "v1",
+    "license": {
+      "name": "YES24 오픈 API 이용약관",
+      "url": "https://developers.yes24.com"
+    }
+  },
+  "paths": {
+    "/v1/category/list": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "카테고리 조회",
+        "description": "예스24의 분야별 카테고리 목록을 조회한다.",
+        "operationId": "GetCategoryList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryInfoIEnumerableDataWithMetaApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/bestsellerRealtime": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "실시간 베스트셀러 조회",
+        "description": "지정된 전시 카테고리의 실시간 베스트셀러 목록을 조회한다.\r\n캐시 또는 집계 로직 없이 최신 순으로 결과를 제공한다.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetBestSellerRealtime"
+      }
+    },
+    "/v1/category/bestseller": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "종합 베스트셀러 조회",
+        "description": "종합 집계 기준으로 베스트셀러 목록을 조회한다. 성별(sex) 및 연령(age) 필터를 지원한다.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "description": "성별 필터 (기본: A) - A(전체), M(남성), F(여성)",
+            "schema": {
+              "type": "string",
+              "default": "A"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "description": "연령 필터 (기본: 255) - 전체(255), 10대(10), 20대(20), 30대(30), 40대(40), 50대(50), 60대이상(60)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 255
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본: 20, 최대값: 100)",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetBestSeller"
+      }
+    },
+    "/v1/category/bestsellerDeal": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "특가 베스트셀러 조회",
+        "description": "특가 집계 기준의 베스트셀러 목록을 조회한다. 필터는 종합 목록과 동일하다.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본: 20, 최대값: 100)",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetBestSellerDeal"
+      }
+    },
+    "/v1/category/bestsellerSteady": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "스테디셀러 조회",
+        "description": "스테디셀러 목록을 조회한다.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본: 20)",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetBestSellerSteady"
+      }
+    },
+    "/v1/category/bestsellerDaily": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "일별 베스트셀러 조회",
+        "description": "지정한 날짜 기준으로 베스트셀러 목록을 조회한다. 성별(sex) 및 연령(age) 필터를 지원한다.\r\ndate 파라미터를 생략하면 어제 날짜 기준으로 조회한다.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "조회 기준일 (yyyy-MM-dd, 기본: 어제)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "description": "성별 필터 (기본: A) - A(전체), M(남성), F(여성)",
+            "schema": {
+              "type": "string",
+              "default": "A"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "description": "연령 필터 (기본: 255) - 전체(255), 10대(10), 20대(20), 30대(30), 40대(40), 50대(50), 60대이상(60)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 255
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본: 20, 최대값: 100)",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetBestSellerDaily"
+      }
+    },
+    "/v1/category/bestsellerMonthly": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "월별 베스트셀러 조회",
+        "description": "지정한 날짜 기준 연월로 베스트셀러 목록을 조회한다. 성별(sex) 및 연령(age) 필터를 지원한다.\r\ndate 파라미터를 생략하면 어제 날짜 기준으로 조회한다.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "조회 기준일 (yyyy-MM-dd, 기본: 어제)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "description": "성별 필터 (기본: A) - A(전체), M(남성), F(여성)",
+            "schema": {
+              "type": "string",
+              "default": "A"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "description": "연령 필터 (기본: 255) - 전체(255), 10대(10), 20대(20), 30대(30), 40대(40), 50대(50), 60대이상(60)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 255
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본: 20, 최대값: 100)",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetBestSellerMonthly"
+      }
+    },
+    "/v1/category/newproduct": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "신상품 조회",
+        "description": "특정 전시 카테고리의 신상품 목록을 조회한다. 정렬 옵션(sort)을 통해 노출 우선순위를 변경 가능.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "정렬 코드 - RegDate(등록일순), Sales(판매량순), New(신상품순), LowPrice(최저가순), HighPrice(최고가순), Name(상품명순)",
+            "schema": {
+              "type": "string",
+              "default": "RegDate"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20, 최대값: 100)",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetNewProduct"
+      }
+    },
+    "/v1/category/newproductAttention": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "주목할 신상품 조회",
+        "description": "사용성 또는 편집 기준으로 선별된 주목할 신상품을 조회한다.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "카테고리 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "정렬 코드 - RegDate(등록일순,), Sales(판매량순), New(신상품순), LowPrice(최저가순), HighPrice(최고가순), Name(상품명순)",
+            "schema": {
+              "type": "string",
+              "default": "RegDate"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20, 최대값: 100)",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "operationId": "GetAttentionNewProduct"
+      }
+    },
+    "/v1/category/list/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "카테고리 목록 Excel 다운로드",
+        "operationId": "ExportCategoryList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/bestsellerRealtime/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "베스트셀러(실시간) Excel 다운로드",
+        "operationId": "ExportBestSellerRealtime",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/bestseller/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "베스트셀러(종합) Excel 다운로드",
+        "operationId": "ExportBestSeller",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "A"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 255
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/bestsellerDeal/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "베스트셀러(특가) Excel 다운로드",
+        "operationId": "ExportBestSellerDeal",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/bestsellerSteady/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "베스트셀러(스테디셀러) Excel 다운로드",
+        "operationId": "ExportBestSellerSteady",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/bestsellerDaily/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "베스트셀러(일별) Excel 다운로드",
+        "operationId": "ExportBestSellerDaily",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "A"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 255
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/bestsellerMonthly/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "베스트셀러(월별) Excel 다운로드",
+        "operationId": "ExportBestSellerMonthly",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "A"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 255
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/newproduct/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "신상품 Excel 다운로드",
+        "operationId": "ExportNewProduct",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "RegDate"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/category/newproductAttention/export": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "주목할 신상품 Excel 다운로드",
+        "operationId": "ExportAttentionNewProduct",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "RegDate"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/goods/itemList": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "summary": "상품 검색",
+        "description": "검색 엔진을 호출하여 일치하는 상품 목록을 반환한다. 검색어가 비어있으면 BadRequest를 반환할 수 있다.\r\n결과는 페이징되어 반환되며 각 항목에는 cover 등 상품 정보가 포함된다.",
+        "operationId": "GetItemList",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "검색어(필수)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "검색 카테고리 (기본: ALL) - ALL(전체), BOOK(국내도서), FOREIGN(외국도서), EBOOK(전자책), MUSIC(음반), DVD(DVD)",
+            "schema": {
+              "type": "string",
+              "default": "ALL"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "정렬 방식 (기본: DEFAULT) - DEFAULT(인기도순), RELATION(정확도순), RECENT(신상품순), REG_DTS(등록일순)",
+            "schema": {
+              "type": "string",
+              "default": "DEFAULT"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호 (기본: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 크기 (기본: 20)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "상세정보 포함 여부 (Y: 전체정보, N: 간단정보 / 기본: N)",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/goods/itemDetail": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "summary": "상품 상세 조회",
+        "operationId": "GetItemDetail",
+        "parameters": [
+          {
+            "name": "searchType",
+            "in": "query",
+            "description": "검색 유형 (기본: ISBN13) - ISBN13 / ItemId",
+            "schema": {
+              "type": "string",
+              "default": "ISBN13"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "상품 번호 또는 ISBN13 값",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "상세정보 포함 여부 (Y: 전체정보, N: 간단정보 / 기본: N)",
+            "schema": {
+              "type": "string",
+              "default": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsInfoPagedResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/goods/content": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "summary": "상품 목차 조회",
+        "operationId": "GetGoodsContent",
+        "parameters": [
+          {
+            "name": "searchType",
+            "in": "query",
+            "description": "검색 유형 (기본: ISBN13) - ISBN13 / ItemId",
+            "schema": {
+              "type": "string",
+              "default": "ISBN13"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "상품 번호 또는 ISBN13 값",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoodsContentInfoDataWithMetaApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/v1/goods/author": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "summary": "작가 기본 정보 조회",
+        "operationId": "GetAuthor",
+        "parameters": [
+          {
+            "name": "searchType",
+            "in": "query",
+            "description": "검색 유형 (기본: ISBN13) - ISBN13 / ItemId",
+            "schema": {
+              "type": "string",
+              "default": "ISBN13"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "상품 번호 또는 ISBN13 값",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorFileInfoDataWithMetaApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부"
+          },
+          "message": {
+            "type": "string",
+            "description": "응답 메시지",
+            "nullable": true
+          },
+          "data": {
+            "description": "응답 데이터"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "에러 코드 (실패 시)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "데이터 없는 API 공통 응답 래퍼"
+      },
+      "AuthorFileInfo": {
+        "type": "object",
+        "properties": {
+          "authorId": {
+            "type": "integer",
+            "description": "작가 번호",
+            "format": "int32"
+          },
+          "author": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorType": {
+            "type": "string",
+            "nullable": true
+          },
+          "birthDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "deathDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "debutTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "link": {
+            "type": "string",
+            "description": "작가 링크",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "작가 파일 기본 정보"
+      },
+      "AuthorFileInfoDataWithMeta": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AuthorFileInfo"
+          }
+        },
+        "additionalProperties": false,
+        "description": "응답 데이터와 메타를 함께 반환하는 래퍼"
+      },
+      "AuthorFileInfoDataWithMetaApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부"
+          },
+          "message": {
+            "type": "string",
+            "description": "응답 메시지",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/AuthorFileInfoDataWithMeta"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "에러 코드 (실패 시)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "API 공통 응답 래퍼"
+      },
+      "CategoryInfo": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "description": "카테고리 아이디 (CATEGORY_ID)",
+            "nullable": true
+          },
+          "categoryName": {
+            "type": "string",
+            "description": "카테고리 명 (CATEGORY_NAME)",
+            "nullable": true
+          },
+          "categoryFullPath": {
+            "type": "string",
+            "description": "카테고리 전체 경로 (CATEGORY_FULL_PATH)",
+            "nullable": true
+          },
+          "categoryUrl": {
+            "type": "string",
+            "description": "카테고리 URL — {CategorySettings.BaseUrl}/product/category/display/{CategoryId}",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "카테고리 조회 결과 DTO"
+      },
+      "CategoryInfoIEnumerableDataWithMeta": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryInfo"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "응답 데이터와 메타를 함께 반환하는 래퍼"
+      },
+      "CategoryInfoIEnumerableDataWithMetaApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부"
+          },
+          "message": {
+            "type": "string",
+            "description": "응답 메시지",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CategoryInfoIEnumerableDataWithMeta"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "에러 코드 (실패 시)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "API 공통 응답 래퍼"
+      },
+      "GoodsCardNewsImage": {
+        "type": "object",
+        "properties": {
+          "cardNewsMasterSeq": {
+            "type": "integer",
+            "description": "카드뉴스 마스터 순번",
+            "format": "int32"
+          },
+          "fileNo": {
+            "type": "integer",
+            "description": "파일 번호",
+            "format": "int32"
+          },
+          "fileSortNo": {
+            "type": "integer",
+            "description": "파일 정렬 순서",
+            "format": "int32"
+          },
+          "fileExpNm": {
+            "type": "string",
+            "description": "파일 확장자",
+            "nullable": true
+          },
+          "servFileNm": {
+            "type": "string",
+            "description": "서비스 파일명",
+            "nullable": true
+          },
+          "servFilePath": {
+            "type": "string",
+            "description": "서비스 파일 경로",
+            "nullable": true
+          },
+          "imageFullPath": {
+            "type": "string",
+            "description": "이미지 CDN 전체 경로",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "카드뉴스 이미지 항목 — USP_AX_GoodsImageContentsInformation_S 첫 번째 결과셋"
+      },
+      "GoodsContentDetail": {
+        "type": "object",
+        "properties": {
+          "bookIntroduction": {
+            "type": "string",
+            "description": "책 소개",
+            "nullable": true
+          },
+          "bookSummary": {
+            "type": "string",
+            "description": "책 요약",
+            "nullable": true
+          },
+          "tableOfContents": {
+            "type": "string",
+            "description": "목차",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "상품 소개/요약/목차 정보 (2번째 결과셋)"
+      },
+      "GoodsContentInfo": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer",
+            "description": "상품 번호",
+            "format": "int32"
+          },
+          "contents": {
+            "type": "string",
+            "description": "목차 콘텐츠",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "상품 목차 정보"
+      },
+      "GoodsContentInfoDataWithMeta": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GoodsContentInfo"
+          }
+        },
+        "additionalProperties": false,
+        "description": "응답 데이터와 메타를 함께 반환하는 래퍼"
+      },
+      "GoodsContentInfoDataWithMetaApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부"
+          },
+          "message": {
+            "type": "string",
+            "description": "응답 메시지",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/GoodsContentInfoDataWithMeta"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "에러 코드 (실패 시)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "API 공통 응답 래퍼"
+      },
+      "GoodsContentsInformation": {
+        "type": "object",
+        "properties": {
+          "contNo": {
+            "type": "integer",
+            "description": "컨텐츠 번호",
+            "format": "int32"
+          },
+          "contGb": {
+            "type": "string",
+            "description": "컨텐츠 구분 (04: 구성, 05: 책속으로, 09: 추천평, 12: YES24리뷰, 13: 제작사리뷰, 17: MD편집문구)",
+            "nullable": true
+          },
+          "contName": {
+            "type": "string",
+            "description": "컨텐츠 유형명",
+            "nullable": true
+          },
+          "contTtl": {
+            "type": "string",
+            "description": "컨텐츠 제목",
+            "nullable": true
+          },
+          "cont": {
+            "type": "string",
+            "description": "컨텐츠 본문",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "상품 컨텐츠 정보 — USP_AX_GoodsContentsInformation_S 결과셋"
+      },
+      "GoodsDetailImage": {
+        "type": "object",
+        "properties": {
+          "fileGb": {
+            "type": "string",
+            "description": "파일 구분",
+            "nullable": true
+          },
+          "fileKindGb": {
+            "type": "string",
+            "description": "파일 종류 구분",
+            "nullable": true
+          },
+          "servFileNm": {
+            "type": "string",
+            "description": "서비스 파일명",
+            "nullable": true
+          },
+          "servFilePath": {
+            "type": "string",
+            "description": "서비스 파일 경로",
+            "nullable": true
+          },
+          "imageFullPath": {
+            "type": "string",
+            "description": "이미지 CDN 전체 경로",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "상품 상세 이미지 항목 — USP_AX_GoodsImageContentsInformation_S 두 번째 결과셋"
+      },
+      "GoodsInfo": {
+        "type": "object",
+        "properties": {
+          "sortOrder": {
+            "type": "integer",
+            "description": "순서",
+            "format": "int32"
+          },
+          "itemId": {
+            "type": "integer",
+            "description": "상품 번호",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "description": "상품 제목",
+            "nullable": true
+          },
+          "subTitle": {
+            "type": "string",
+            "description": "부제목",
+            "nullable": true
+          },
+          "author": {
+            "type": "string",
+            "description": "저자",
+            "nullable": true
+          },
+          "goodsType": {
+            "type": "string",
+            "description": "상품 유형",
+            "nullable": true
+          },
+          "goodsSortNm": {
+            "type": "string",
+            "description": "관리분류",
+            "nullable": true
+          },
+          "adultYn": {
+            "type": "string",
+            "description": "성인물 여부",
+            "nullable": true
+          },
+          "publisher": {
+            "type": "string",
+            "description": "출판사",
+            "nullable": true
+          },
+          "isbn10": {
+            "type": "string",
+            "description": "ISBN10",
+            "nullable": true
+          },
+          "isbn13": {
+            "type": "string",
+            "description": "ISBN13",
+            "nullable": true
+          },
+          "shopPrice": {
+            "type": "number",
+            "description": "정가",
+            "format": "double"
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "판매가",
+            "format": "double"
+          },
+          "publishDate": {
+            "type": "string",
+            "description": "출간일",
+            "nullable": true
+          },
+          "itemStatus": {
+            "type": "string",
+            "description": "상품 판매 상태",
+            "nullable": true
+          },
+          "yesPoint": {
+            "type": "integer",
+            "description": "YES 포인트",
+            "format": "int32",
+            "nullable": true
+          },
+          "salePoint": {
+            "type": "integer",
+            "description": "판매지수",
+            "format": "int32",
+            "nullable": true
+          },
+          "fixedBookPriceYn": {
+            "type": "string",
+            "description": "도서정가제 여부",
+            "nullable": true
+          },
+          "originalTitle": {
+            "type": "string",
+            "description": "원제",
+            "nullable": true
+          },
+          "originalTranslation": {
+            "type": "string",
+            "description": "번역서 여부",
+            "nullable": true
+          },
+          "pages": {
+            "type": "integer",
+            "description": "페이지 수",
+            "format": "int32",
+            "nullable": true
+          },
+          "weight": {
+            "type": "integer",
+            "description": "무게 (g)",
+            "format": "int32",
+            "nullable": true
+          },
+          "width": {
+            "type": "integer",
+            "description": "가로 (mm)",
+            "format": "int32",
+            "nullable": true
+          },
+          "height": {
+            "type": "integer",
+            "description": "높이 (mm)",
+            "format": "int32",
+            "nullable": true
+          },
+          "length": {
+            "type": "integer",
+            "description": "세로 (mm)",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemFormat": {
+            "type": "string",
+            "description": "판형",
+            "nullable": true
+          },
+          "starScore": {
+            "type": "number",
+            "description": "별점 계산 결과 (TotalReviewContentScore + TotalReviewCompilationScore) / TotalReviewCount",
+            "format": "double",
+            "readOnly": true
+          },
+          "cover": {
+            "type": "string",
+            "description": "커버 이미지 URL",
+            "nullable": true,
+            "readOnly": true
+          },
+          "link": {
+            "type": "string",
+            "description": "상품 링크.\r\n - 애드온 신청 회원: 애드온 클릭 URL (apis.yes24.com/a/{userKey}/goods/{상품번호})\r\n - 일반 회원: 예스24 상품 상세 URL\r\n회원번호는 요청 범위 앰비언트(AddonRequestContext)에서 읽는다(공유 캐시 인스턴스 변형 방지).",
+            "nullable": true,
+            "readOnly": true
+          },
+          "addOnLink": {
+            "type": "string",
+            "description": "Addon link. Returns the addon click URL for addon users; otherwise an empty string.",
+            "nullable": true,
+            "readOnly": true
+          },
+          "mobileLink": {
+            "type": "string",
+            "description": "모바일 상품 링크",
+            "nullable": true,
+            "readOnly": true
+          },
+          "upDown": {
+            "type": "integer",
+            "description": "베스트셀러 등락 값",
+            "format": "int32",
+            "nullable": true
+          },
+          "ebookId": {
+            "type": "integer",
+            "description": "연결된 eBook 상품번호 (DB: EBOOK_ID)",
+            "format": "int32",
+            "nullable": true
+          },
+          "creamaClubYn": {
+            "type": "string",
+            "description": "크레마클럽 서비스 여부",
+            "nullable": true
+          },
+          "eBookLink": {
+            "type": "string",
+            "description": "연결된 eBook 링크 (EOOK_ID > 0 일 때만 반환)",
+            "nullable": true,
+            "readOnly": true
+          },
+          "contentDetail": {
+            "$ref": "#/components/schemas/GoodsContentDetail"
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsSeriesInfo"
+            },
+            "description": "시리즈 목록 (3번째 결과셋)",
+            "nullable": true
+          },
+          "compositions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsContentsInformation"
+            },
+            "description": "구성 목록 (CONT_GB=04)",
+            "nullable": true
+          },
+          "bookInside": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsContentsInformation"
+            },
+            "description": "책속으로 목록 (CONT_GB=05)",
+            "nullable": true
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsContentsInformation"
+            },
+            "description": "추천평 목록 (CONT_GB=09)",
+            "nullable": true
+          },
+          "yes24Reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsContentsInformation"
+            },
+            "description": "YES24리뷰 목록 (CONT_GB=12)",
+            "nullable": true
+          },
+          "publisherReviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsContentsInformation"
+            },
+            "description": "제작사리뷰 목록 (CONT_GB=13)",
+            "nullable": true
+          },
+          "mdEditTexts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsContentsInformation"
+            },
+            "description": "MD편집문구 목록 (CONT_GB=17)",
+            "nullable": true
+          },
+          "cardNewsImages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsCardNewsImage"
+            },
+            "description": "카드뉴스 이미지 목록 — File_Sort_No 오름차순 정렬",
+            "nullable": true
+          },
+          "detailImages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsDetailImage"
+            },
+            "description": "상품 상세 이미지 목록",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "통합 상품 모델"
+      },
+      "GoodsInfoPagedResult": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsInfo"
+            },
+            "description": "아이템 목록",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "description": "현재 페이지",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "페이지 크기",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "총 데이터 수",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "페이징 결과 모델 (메타 포함; data 안에서 반환)"
+      },
+      "GoodsInfoPagedResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부"
+          },
+          "message": {
+            "type": "string",
+            "description": "응답 메시지",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/GoodsInfoPagedResult"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "에러 코드 (실패 시)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "API 공통 응답 래퍼"
+      },
+      "GoodsSeriesInfo": {
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "type": "integer",
+            "description": "시리즈 ID",
+            "format": "int32"
+          },
+          "seriesName": {
+            "type": "string",
+            "description": "시리즈 이름",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "상품 시리즈 정보 (3번째 결과셋)"
+      },
+      "ResponseMeta": {
+        "type": "object",
+        "properties": {
+          "apiTitle": {
+            "type": "string",
+            "description": "API 제목",
+            "nullable": true
+          },
+          "apiLink": {
+            "type": "string",
+            "description": "API 링크",
+            "nullable": true
+          },
+          "logoUrl": {
+            "type": "string",
+            "description": "로고 URL",
+            "nullable": true
+          },
+          "pubDate": {
+            "type": "string",
+            "description": "응답일시 (ISO 8601)",
+            "nullable": true
+          },
+          "query": {
+            "type": "string",
+            "description": "조회 쿼리",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "description": "API 버전",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "API 공통 응답 메타 (페이징 여부와 무관하게 모든 응답에 포함되는 헤더 정보)"
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "description": "API Key를 입력하세요.",
+        "name": "X-Api-Key",
+        "in": "header"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Category",
+      "description": "카테고리 관련 컨트롤러"
+    },
+    {
+      "name": "Goods",
+      "description": "상품 관련 API 엔드포인트"
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://apis.yes24.com",
+      "description": "운영 서버"
+    }
+  ],
+  "security": [
+    {
+      "ApiKey": []
+    }
+  ]
+}
