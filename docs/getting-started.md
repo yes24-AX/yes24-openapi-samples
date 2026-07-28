@@ -68,5 +68,5 @@ Invoke-RestMethod -Headers @{ "X-Api-Key" = "발급받은키" } `
 ## 5. 다음 단계
 
 - [API 레퍼런스](api-reference.md) — 전체 엔드포인트·파라미터·응답 필드
-- [samples/](../samples) — .NET·JavaScript·Python·MCP 실행 가능한 샘플 4종
+- [samples/](../samples) — .NET·JavaScript·Python 실행 가능한 샘플 3종
 - [postman/](../postman) — Postman Collection 으로 바로 호출해 보기

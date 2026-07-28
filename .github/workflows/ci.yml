@@ -33,4 +33,4 @@ jobs:
         with:
           python-version: "3.12"
       - name: Python 샘플 구문 검사
-        run: python -m py_compile samples/python-book-analysis/bestseller_analysis.py samples/mcp-book-search/server.py
+        run: python -m py_compile samples/python-book-analysis/bestseller_analysis.py

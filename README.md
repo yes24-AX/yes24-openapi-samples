@@ -42,7 +42,6 @@ curl -H "X-Api-Key: {발급받은키}" \
 | [samples/dotnet-book-search](samples/dotnet-book-search) | 도서 검색 콘솔 앱 (외부 패키지 0개) | .NET 10 SDK |
 | [samples/javascript-bestseller-widget](samples/javascript-bestseller-widget) | 임베드형 베스트셀러 위젯 + 프록시 (키 없이 데모 실행 가능) | Node.js 18+ |
 | [samples/python-book-analysis](samples/python-book-analysis) | 베스트셀러 200건 수집·분석 (pandas, 노트북 포함) | Python 3.10+ |
-| [samples/mcp-book-search](samples/mcp-book-search) | ChatGPT·Claude용 도서 검색 MCP 서버 | Python 3.10+ |
 | [openapi/](openapi) | OpenAPI 3.0 명세 (`yes24-openapi-v1.json`) | — |
 | [postman/](postman) | Postman Collection + Environment | Postman |
 | [docs/](docs) | 시작 가이드 · API 레퍼런스 · 오류 코드 | — |
