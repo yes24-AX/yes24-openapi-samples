@@ -2110,48 +2110,6 @@
         "additionalProperties": false,
         "description": "API 공통 응답 래퍼"
       },
-      "GoodsCardNewsImage": {
-        "type": "object",
-        "properties": {
-          "cardNewsMasterSeq": {
-            "type": "integer",
-            "description": "카드뉴스 마스터 순번",
-            "format": "int32"
-          },
-          "fileNo": {
-            "type": "integer",
-            "description": "파일 번호",
-            "format": "int32"
-          },
-          "fileSortNo": {
-            "type": "integer",
-            "description": "파일 정렬 순서",
-            "format": "int32"
-          },
-          "fileExpNm": {
-            "type": "string",
-            "description": "파일 확장자",
-            "nullable": true
-          },
-          "servFileNm": {
-            "type": "string",
-            "description": "서비스 파일명",
-            "nullable": true
-          },
-          "servFilePath": {
-            "type": "string",
-            "description": "서비스 파일 경로",
-            "nullable": true
-          },
-          "imageFullPath": {
-            "type": "string",
-            "description": "이미지 CDN 전체 경로",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "카드뉴스 이미지 항목 — USP_AX_GoodsImageContentsInformation_S 첫 번째 결과셋"
-      },
       "GoodsContentDetail": {
         "type": "object",
         "properties": {
@@ -2227,70 +2185,6 @@
         },
         "additionalProperties": false,
         "description": "API 공통 응답 래퍼"
-      },
-      "GoodsContentsInformation": {
-        "type": "object",
-        "properties": {
-          "contNo": {
-            "type": "integer",
-            "description": "컨텐츠 번호",
-            "format": "int32"
-          },
-          "contGb": {
-            "type": "string",
-            "description": "컨텐츠 구분 (04: 구성, 05: 책속으로, 09: 추천평, 12: YES24리뷰, 13: 제작사리뷰, 17: MD편집문구)",
-            "nullable": true
-          },
-          "contName": {
-            "type": "string",
-            "description": "컨텐츠 유형명",
-            "nullable": true
-          },
-          "contTtl": {
-            "type": "string",
-            "description": "컨텐츠 제목",
-            "nullable": true
-          },
-          "cont": {
-            "type": "string",
-            "description": "컨텐츠 본문",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "상품 컨텐츠 정보 — USP_AX_GoodsContentsInformation_S 결과셋"
-      },
-      "GoodsDetailImage": {
-        "type": "object",
-        "properties": {
-          "fileGb": {
-            "type": "string",
-            "description": "파일 구분",
-            "nullable": true
-          },
-          "fileKindGb": {
-            "type": "string",
-            "description": "파일 종류 구분",
-            "nullable": true
-          },
-          "servFileNm": {
-            "type": "string",
-            "description": "서비스 파일명",
-            "nullable": true
-          },
-          "servFilePath": {
-            "type": "string",
-            "description": "서비스 파일 경로",
-            "nullable": true
-          },
-          "imageFullPath": {
-            "type": "string",
-            "description": "이미지 CDN 전체 경로",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "상품 상세 이미지 항목 — USP_AX_GoodsImageContentsInformation_S 두 번째 결과셋"
       },
       "GoodsInfo": {
         "type": "object",
@@ -2444,6 +2338,18 @@
             "nullable": true,
             "readOnly": true
           },
+          "sideCover": {
+            "type": "string",
+            "description": "책등 이미지 URL (이미지 미등록 상품은 이미지 서버가 대체 이미지 반환)",
+            "nullable": true,
+            "readOnly": true
+          },
+          "backCover": {
+            "type": "string",
+            "description": "뒷표지 이미지 URL (이미지 미등록 상품은 이미지 서버가 대체 이미지 반환)",
+            "nullable": true,
+            "readOnly": true
+          },
           "link": {
             "type": "string",
             "description": "상품 링크.\r\n - 애드온 신청 회원: 애드온 클릭 URL (apis.yes24.com/a/{userKey}/goods/{상품번호})\r\n - 일반 회원: 예스24 상품 상세 URL\r\n회원번호는 요청 범위 앰비언트(AddonRequestContext)에서 읽는다(공유 캐시 인스턴스 변형 방지).",
@@ -2474,11 +2380,6 @@
             "format": "int32",
             "nullable": true
           },
-          "creamaClubYn": {
-            "type": "string",
-            "description": "크레마클럽 서비스 여부",
-            "nullable": true
-          },
           "eBookLink": {
             "type": "string",
             "description": "연결된 eBook 링크 (EOOK_ID > 0 일 때만 반환)",
@@ -2494,70 +2395,6 @@
               "$ref": "#/components/schemas/GoodsSeriesInfo"
             },
             "description": "시리즈 목록 (3번째 결과셋)",
-            "nullable": true
-          },
-          "compositions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsContentsInformation"
-            },
-            "description": "구성 목록 (CONT_GB=04)",
-            "nullable": true
-          },
-          "bookInside": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsContentsInformation"
-            },
-            "description": "책속으로 목록 (CONT_GB=05)",
-            "nullable": true
-          },
-          "recommendations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsContentsInformation"
-            },
-            "description": "추천평 목록 (CONT_GB=09)",
-            "nullable": true
-          },
-          "yes24Reviews": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsContentsInformation"
-            },
-            "description": "YES24리뷰 목록 (CONT_GB=12)",
-            "nullable": true
-          },
-          "publisherReviews": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsContentsInformation"
-            },
-            "description": "제작사리뷰 목록 (CONT_GB=13)",
-            "nullable": true
-          },
-          "mdEditTexts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsContentsInformation"
-            },
-            "description": "MD편집문구 목록 (CONT_GB=17)",
-            "nullable": true
-          },
-          "cardNewsImages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsCardNewsImage"
-            },
-            "description": "카드뉴스 이미지 목록 — File_Sort_No 오름차순 정렬",
-            "nullable": true
-          },
-          "detailImages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GoodsDetailImage"
-            },
-            "description": "상품 상세 이미지 목록",
             "nullable": true
           }
         },
