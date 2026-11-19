@@ -2130,7 +2130,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "상품 소개/요약/목차 정보 (2번째 결과셋)"
+        "description": "상품 소개/요약/목차 정보"
       },
       "GoodsContentInfo": {
         "type": "object",
@@ -2352,7 +2352,7 @@
           },
           "link": {
             "type": "string",
-            "description": "상품 링크.\r\n - 애드온 신청 회원: 애드온 클릭 URL (apis.yes24.com/a/{userKey}/goods/{상품번호})\r\n - 일반 회원: 예스24 상품 상세 URL\r\n회원번호는 요청 범위 앰비언트(AddonRequestContext)에서 읽는다(공유 캐시 인스턴스 변형 방지).",
+            "description": "상품 링크.\r\n - 애드온 신청 회원: 애드온 클릭 URL (apis.yes24.com/a/{userKey}/goods/{상품번호})\r\n - 일반 회원: 예스24 상품 상세 URL",
             "nullable": true,
             "readOnly": true
           },
@@ -2376,7 +2376,7 @@
           },
           "ebookId": {
             "type": "integer",
-            "description": "연결된 eBook 상품번호 (DB: EBOOK_ID)",
+            "description": "연결된 eBook 상품번호",
             "format": "int32",
             "nullable": true
           },
@@ -2394,7 +2394,7 @@
             "items": {
               "$ref": "#/components/schemas/GoodsSeriesInfo"
             },
-            "description": "시리즈 목록 (3번째 결과셋)",
+            "description": "시리즈 목록",
             "nullable": true
           }
         },
@@ -2473,7 +2473,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "상품 시리즈 정보 (3번째 결과셋)"
+        "description": "상품 시리즈 정보"
       },
       "ResponseMeta": {
         "type": "object",
